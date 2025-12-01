@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! // DB への書き込みOK
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // ← ここを修正
 );
 
 export async function POST(req: NextRequest) {
@@ -23,17 +23,13 @@ export async function POST(req: NextRequest) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
 
-      const lineUid = session.client_reference_id;
-      const customerId = session.customer as string;
-      const subscriptionId = session.subscription as string;
-
       await supabase.from("members").insert({
-        line_uid: lineUid,
-        stripe_customer_id: customerId,
+        line_uid: session.client_reference_id,
+        stripe_customer_id: session.customer as string,
         subscription_status: "active",
       });
 
-      console.log("🟢 Insert success:", lineUid);
+      console.log("🟢 Insert success:", session.client_reference_id);
     }
 
     return new NextResponse("ok", { status: 200 });
