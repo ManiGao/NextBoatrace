@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // ← ここを修正
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // ← OK
 );
 
 export async function POST(req: NextRequest) {
@@ -39,6 +39,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export const runtime = "nodejs";
 export const config = {
-  api: { bodyParser: false },
+  api: {
+    bodyParser: false,
+  },
 };
