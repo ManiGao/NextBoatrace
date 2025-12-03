@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
             const customerId = session.customer as string;
             const subId = session.subscription as string;
 
-            await supabase.from("members").insert({
+            const { data, error } = await supabase.from("members").insert({
                 line_uid: lineUid,
                 stripe_customer_id: customerId,
                 subscription_id: subId,
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
                 current_period_end: null,
                 is_member: true,
             });
+            console.log("INSERT result:", { data, error });
 
             console.log("🟢 members に初回登録:", lineUid);
         }
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
                 status === "trialing" ||
                 (currentPeriodEnd && currentPeriodEnd > new Date());
 
-            await supabase
+            const { data, error } = await supabase
                 .from("members")
                 .update({
                     subscription_status: status,
@@ -72,6 +73,7 @@ export async function POST(req: NextRequest) {
                     subscription_id: sub.id,
                 })
                 .eq("stripe_customer_id", customerId);
+            console.log("UPDATE result:", { data, error });
 
             console.log("🟡 サブスク更新:", customerId, status);
         }
@@ -84,13 +86,14 @@ export async function POST(req: NextRequest) {
 
             const customerId = sub.customer as string;
 
-            await supabase
+            const { data, error } = await supabase
                 .from("members")
                 .update({
                     subscription_status: "canceled",
                     is_member: false,
                 })
                 .eq("stripe_customer_id", customerId);
+            console.log("DELETE result:", { data, error });
 
             console.log("🔴 サブスク解約:", customerId);
         }
@@ -105,13 +108,14 @@ export async function POST(req: NextRequest) {
 
             const customerId = invoice.customer as string;
 
-            await supabase
+            const { data, error } = await supabase
                 .from("members")
                 .update({
                     subscription_status: "past_due",
                     is_member: false,
                 })
                 .eq("stripe_customer_id", customerId);
+            console.log("PAST_DUE result:", { data, error });
 
             console.log("⚠️ 支払い失敗:", customerId);
         }
