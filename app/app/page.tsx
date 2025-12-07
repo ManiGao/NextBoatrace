@@ -35,132 +35,285 @@ export default async function AppPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-3xl px-4 py-6">
-        <header className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">会員専用メニュー</h1>
-          <p className="mt-1 text-sm text-gray-600">
-            ログインおよび会員認証に成功しました 🎉
-            <br />
-            ここから各機能ページへ移動できます。
+    <main
+      style={{
+        minHeight: "100vh",
+        padding: "24px 12px 40px",
+        background:
+          "radial-gradient(circle at top, #1d2a4d 0, #020617 55%, #000 100%)",
+        color: "#e2e8f0",
+        display: "flex",
+        justifyContent: "center",
+        fontFamily:
+          "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "960px",
+          background: "rgba(15,23,42,0.9)",
+          borderRadius: "24px",
+          padding: "24px 22px 30px",
+          boxShadow: "0 24px 70px rgba(15,23,42,0.95)",
+          border: "1px solid rgba(148,163,184,0.3)",
+        }}
+      >
+        <header style={{ marginBottom: "22px" }}>
+          <h1
+            style={{
+              fontSize: "22px",
+              fontWeight: 700,
+              letterSpacing: "0.03em",
+              marginBottom: "6px",
+            }}
+          >
+            会員専用メニュー
+          </h1>
+          <p style={{ fontSize: "13px", color: "#94a3b8", lineHeight: 1.6 }}>
+            ログインおよび会員認証に成功しました 🎉  
+            各機能ページへアクセスできます。
           </p>
         </header>
 
-        <section className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-900">
-            📊 今日の番組表＋事故点・事故率・ST平均
+        {/* Section: 番組表モジュール */}
+        <section
+          style={{
+            marginBottom: "20px",
+            padding: "14px 16px",
+            borderRadius: "16px",
+            background:
+              "linear-gradient(135deg, rgba(30,64,175,0.85), rgba(8,47,73,0.9))",
+            border: "1px solid rgba(148,163,184,0.4)",
+          }}
+        >
+          <h2 style={{ fontSize: "15px", fontWeight: 600, marginBottom: "6px" }}>
+            📊 今日の番組表 + 事故点 / 事故率 / ST
           </h2>
-          <p className="mt-2 text-sm text-gray-700">
-            以前の GAS アプリで表示していた「当日の番組表＋事故点・事故率・ST 平均」の表を、
-            今後は別ページとして表示します。
+          <p style={{ fontSize: "12px", color: "#e2e8f0", lineHeight: 1.5 }}>
+            GAS スプレッドシートと連携し、選手データと番組表をまとめて確認できるページです。
           </p>
-          <p className="mt-1 text-xs text-gray-500">
-            まずは「① 今日の番組表＋事故関連データ」ページ（例:{" "}
-            <code className="rounded bg-gray-100 px-1 py-0.5 text-[11px]">
+          <p style={{ fontSize: "11px", marginTop: "6px", color: "#cbd5e1" }}>
+            実装済み：  
+            <code
+              style={{
+                padding: "2px 4px",
+                borderRadius: "4px",
+                background: "rgba(15,23,42,0.6)",
+                fontSize: "11px",
+              }}
+            >
               /program
             </code>
-            ）を実装し、そこにデータを表示していきます。
           </p>
         </section>
 
+        {/* Section: メニューリンク */}
         <section>
-          <h2 className="mb-3 text-lg font-semibold text-gray-900">🔗 メニュー</h2>
-          <div className="space-y-3">
-            {/* ① 今日の番組表＋事故関連データ（利用可能） */}
+          <h2
+            style={{
+              marginBottom: "12px",
+              fontSize: "16px",
+              fontWeight: 600,
+            }}
+          >
+            🔗 メニュー
+          </h2>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {/* ① Program */}
             <Link
               href="/program"
-              className="block rounded-lg border border-emerald-200 bg-white p-4 shadow-sm transition hover:border-emerald-300 hover:shadow-md"
+              style={{
+                display: "block",
+                padding: "16px",
+                borderRadius: "16px",
+                background: "rgba(15,23,42,0.6)",
+                border: "1px solid rgba(56,189,248,0.35)",
+                boxShadow: "0 10px 30px rgba(15,23,42,0.7)",
+                transition: "0.2s",
+              }}
             >
-              <div className="flex items-start justify-between gap-3">
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  <div className="text-sm font-semibold text-gray-900">
+                  <div style={{ fontSize: "14px", fontWeight: 600 }}>
                     ① 今日の番組表＋事故関連データ
                   </div>
-                  <p className="mt-1 text-xs text-gray-600">
-                    当日分の番組表、事故点・事故率、ST 平均などを一覧で確認するページです。
-                    GAS / スプレッドシートから取得したデータを Next.js で表示します。
+                  <p
+                    style={{
+                      marginTop: "6px",
+                      fontSize: "12px",
+                      color: "#94a3b8",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    当日番組表・ST・事故点などをまとめて閲覧するページ
                   </p>
                 </div>
-                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                <span
+                  style={{
+                    padding: "3px 8px",
+                    borderRadius: "999px",
+                    background: "rgba(56,189,248,0.15)",
+                    fontSize: "10px",
+                    fontWeight: 600,
+                    color: "#38bdf8",
+                    height: "fit-content",
+                  }}
+                >
                   利用可能
                 </span>
               </div>
             </Link>
 
-            {/* ④ 将来解放するページ（グレーアウト・準備中） */}
-            <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 p-4 opacity-70">
-              <div className="flex items-start justify-between gap-3">
+            {/* ④ future */}
+            <div
+              style={{
+                padding: "16px",
+                borderRadius: "16px",
+                background: "rgba(30,41,59,0.4)",
+                border: "1px dashed rgba(148,163,184,0.4)",
+                opacity: 0.6,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  <div className="text-sm font-semibold text-gray-700">
-                    ④ （将来の機能）
+                  <div style={{ fontSize: "14px", fontWeight: 600 }}>
+                    ④（将来の機能）
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">
-                    将来的に解放予定のページです。現時点では内容非公開のため、
-                    メニュー上ではグレーアウト表示のみとしています。
+                  <p
+                    style={{
+                      marginTop: "6px",
+                      fontSize: "12px",
+                      color: "#94a3b8",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    将来的に解放予定のページ
                   </p>
                 </div>
-                <span className="inline-flex items-center rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-medium text-gray-600">
+                <span
+                  style={{
+                    padding: "3px 8px",
+                    borderRadius: "999px",
+                    background: "rgba(148,163,184,0.2)",
+                    fontSize: "10px",
+                    color: "#94a3b8",
+                    height: "fit-content",
+                  }}
+                >
                   準備中
                 </span>
               </div>
             </div>
 
-            {/* ⑤ 将来解放するページ（グレーアウト・準備中） */}
-            <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 p-4 opacity-70">
-              <div className="flex items-start justify-between gap-3">
+            {/* ⑤ future */}
+            <div
+              style={{
+                padding: "16px",
+                borderRadius: "16px",
+                background: "rgba(30,41,59,0.4)",
+                border: "1px dashed rgba(148,163,184,0.4)",
+                opacity: 0.6,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  <div className="text-sm font-semibold text-gray-700">
-                    ⑤ （将来の機能）
+                  <div style={{ fontSize: "14px", fontWeight: 600 }}>
+                    ⑤（将来の機能）
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">
-                    こちらも将来的に公開予定のページです。
-                    実装が完了した段階で、クリック可能なリンクに切り替えます。
+                  <p
+                    style={{
+                      marginTop: "6px",
+                      fontSize: "12px",
+                      color: "#94a3b8",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    実装完了後にクリック可能になります
                   </p>
                 </div>
-                <span className="inline-flex items-center rounded-full bg-gray-200 px-2 py-0.5 text-[10px] font-medium text-gray-600">
+                <span
+                  style={{
+                    padding: "3px 8px",
+                    borderRadius: "999px",
+                    background: "rgba(148,163,184,0.2)",
+                    fontSize: "10px",
+                    color: "#94a3b8",
+                    height: "fit-content",
+                  }}
+                >
                   準備中
                 </span>
               </div>
             </div>
 
-            {/* ⑦ 予想表（Note 連携イメージ） */}
+            {/* ⑦ predict */}
             <Link
               href="/predict"
-              className="block rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:border-gray-300 hover:shadow-md"
+              style={{
+                padding: "16px",
+                borderRadius: "16px",
+                background: "rgba(15,23,42,0.6)",
+                border: "1px solid rgba(251,191,36,0.35)",
+                boxShadow: "0 10px 30px rgba(15,23,42,0.7)",
+                display: "block",
+                transition: "0.2s",
+              }}
             >
-              <div className="flex items-start justify-between gap-3">
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <div>
-                  <div className="text-sm font-semibold text-gray-900">
+                  <div style={{ fontSize: "14px", fontWeight: 600 }}>
                     ⑦ 予想表（Note 連携イメージ）
                   </div>
-                  <p className="mt-1 text-xs text-gray-600">
-                    Note に載せているような予想表を Web 版として整理する予定のページです。
-                    まずはレイアウトやデータ構造から固めていきます。
+                  <p
+                    style={{
+                      marginTop: "6px",
+                      fontSize: "12px",
+                      color: "#94a3b8",
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    予想表を Web 版で整備していく予定のページ
                   </p>
                 </div>
-                <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                <span
+                  style={{
+                    padding: "3px 8px",
+                    borderRadius: "999px",
+                    background: "rgba(251,191,36,0.15)",
+                    fontSize: "10px",
+                    color: "#fbbf24",
+                    height: "fit-content",
+                  }}
+                >
                   準備中
                 </span>
               </div>
             </Link>
 
-            {/* ⑥ ログアウト（まだ見た目だけ／準備中） */}
-            <div className="rounded-lg border border-gray-200 bg-white p-4 text-sm shadow-sm">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-semibold text-gray-900">⑥ ログアウト</div>
-                  <p className="mt-1 text-xs text-gray-600">
-                    将来的に「line_uid クッキーを削除して /login に戻す」ログアウト機能をここから実行できるようにします。
-                  </p>
-                  <p className="mt-1 text-[11px] text-gray-500">
-                    ※ まだ処理は実装していません。ログアウト API やアクションを用意したタイミングで、
-                    ここにボタンやリンクを追加します。
-                  </p>
-                </div>
-                <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-600">
-                  準備中
-                </span>
+            {/* logout placeholder */}
+            <div
+              style={{
+                padding: "16px",
+                borderRadius: "16px",
+                background: "rgba(15,23,42,0.6)",
+                border: "1px solid rgba(148,163,184,0.3)",
+              }}
+            >
+              <div style={{ fontSize: "14px", fontWeight: 600 }}>
+                ⑥ ログアウト（準備中）
               </div>
+              <p
+                style={{
+                  marginTop: "6px",
+                  fontSize: "12px",
+                  color: "#94a3b8",
+                  lineHeight: 1.5,
+                }}
+              >
+                将来的に line_uid クッキーを削除して /login に遷移させるログアウト機能をここに実装します。
+              </p>
             </div>
           </div>
         </section>
