@@ -1,4 +1,5 @@
 // app/program/page.tsx
+export const dynamic = "force-dynamic";
 
 export default async function ProgramPage() {
   const apiUrl = process.env.NEXT_PUBLIC_GAS_PROGRAM_API_URL!;
