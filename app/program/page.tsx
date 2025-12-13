@@ -2,86 +2,38 @@
 export const dynamic = "force-dynamic";
 
 import ProgramView from "./ProgramView";
+import { createClient } from "@supabase/supabase-js";
 
-type ProgramRow = {
-  jyo: string;
-  race_no: string;
-  waku: number;
+type PlayerSummaryRow = {
+  player_id: number;
   player_name: string;
-  st: number;
-  acc_point: number;
-  acc_rate: number;
+  total_starts: number;
+  accident_count: number;
+  accident_rate: number;
+  st_count: number | null;
+  avg_st: number | null;
 };
 
 export default async function ProgramPage() {
-  const apiUrl = process.env.NEXT_PUBLIC_GAS_PROGRAM_API_URL!;
-  const res = await fetch(apiUrl, { cache: "no-store" });
-  const data = await res.json();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  if (!Array.isArray(data)) {
+  const { data, error } = await supabase
+    .from("player_summary")
+    .select("*")
+    .order("accident_rate", { ascending: false });
+
+  if (error || !Array.isArray(data)) {
     return (
-      <main
-        style={{
-          minHeight: "100vh",
-          padding: "24px 12px",
-          background:
-            "radial-gradient(circle at top, #1d2a4d 0, #020617 55%, #000 100%)",
-          color: "#e2e8f0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily:
-            "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "720px",
-            width: "100%",
-            padding: "24px",
-            borderRadius: "18px",
-            background: "rgba(15,23,42,0.95)",
-            boxShadow: "0 20px 60px rgba(15,23,42,0.9)",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "20px",
-              fontWeight: 600,
-              marginBottom: "8px",
-            }}
-          >
-            今日の番組表
-          </h1>
-          <p style={{ fontSize: "14px", color: "#94a3b8" }}>
-            データ取得に失敗しました。
-          </p>
-          <pre
-            style={{
-              marginTop: "12px",
-              fontSize: "11px",
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-all",
-              color: "#64748b",
-            }}
-          >
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        </div>
+      <main style={{ minHeight: "100vh", padding: "24px", color: "#e2e8f0" }}>
+        <h1>データ取得エラー</h1>
+        <pre style={{ whiteSpace: "pre-wrap" }}>
+          {JSON.stringify(error ?? data, null, 2)}
+        </pre>
       </main>
     );
   }
-
-  const rows = data as ProgramRow[];
-
-  const grouped: Record<string, ProgramRow[]> = rows.reduce(
-    (acc, row) => {
-      if (!acc[row.jyo]) acc[row.jyo] = [];
-      acc[row.jyo].push(row);
-      return acc;
-    },
-    {} as Record<string, ProgramRow[]>
-  );
 
   return (
     <main
@@ -135,7 +87,38 @@ export default async function ProgramPage() {
           </p>
         </header>
 
-        <ProgramView grouped={grouped} />
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            fontSize: "13px",
+          }}
+        >
+          <thead>
+            <tr>
+              <th style={{ textAlign: "left", padding: "8px" }}>選手名</th>
+              <th style={{ textAlign: "right", padding: "8px" }}>出走数</th>
+              <th style={{ textAlign: "right", padding: "8px" }}>事故数</th>
+              <th style={{ textAlign: "right", padding: "8px" }}>事故率</th>
+              <th style={{ textAlign: "right", padding: "8px" }}>ST平均</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(data as PlayerSummaryRow[]).map((r) => (
+              <tr key={r.player_id} style={{ borderTop: "1px solid rgba(148,163,184,0.2)" }}>
+                <td style={{ padding: "8px" }}>{r.player_name}</td>
+                <td style={{ padding: "8px", textAlign: "right" }}>{r.total_starts}</td>
+                <td style={{ padding: "8px", textAlign: "right" }}>{r.accident_count}</td>
+                <td style={{ padding: "8px", textAlign: "right" }}>
+                  {(r.accident_rate * 100).toFixed(2)}%
+                </td>
+                <td style={{ padding: "8px", textAlign: "right" }}>
+                  {r.avg_st !== null ? r.avg_st.toFixed(4) : "-"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </main>
   );
