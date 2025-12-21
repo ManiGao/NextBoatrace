@@ -4,36 +4,45 @@ export const dynamic = "force-dynamic";
 import ProgramView from "./ProgramView";
 import { createClient } from "@supabase/supabase-js";
 
-type PlayerSummaryRow = {
-  player_id: number;
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+type ProgramRow = {
+  jyo: string;
+  race_no: number;
+  waku: number;
   player_name: string;
-  total_starts: number;
-  accident_count: number;
-  accident_rate: number;
-  st_count: number | null;
-  avg_st: number | null;
 };
 
 export default async function ProgramPage() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
   const { data, error } = await supabase
-    .from("player_summary")
+    .from("latest_programs_with_summary")
     .select("*")
-    .order("accident_rate", { ascending: false });
+    .order("race_no", { ascending: true })
+    .order("waku", { ascending: true });
 
-  if (error || !Array.isArray(data)) {
+  if (error) {
     return (
       <main style={{ minHeight: "100vh", padding: "24px", color: "#e2e8f0" }}>
-        <h1>データ取得エラー</h1>
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(error ?? data, null, 2)}
-        </pre>
+        <h1>今日の番組表</h1>
+        <p>データ取得に失敗しました。</p>
+        <pre>{error.message}</pre>
       </main>
     );
   }
+
+  const rows = data as ProgramRow[];
+
+  const grouped: Record<string, ProgramRow[]> = rows.reduce(
+    (acc, row) => {
+      if (!acc[row.jyo]) acc[row.jyo] = [];
+      acc[row.jyo].push(row);
+      return acc;
+    },
+    {} as Record<string, ProgramRow[]>
+  );
 
   return (
     <main
@@ -87,38 +96,7 @@ export default async function ProgramPage() {
           </p>
         </header>
 
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            fontSize: "13px",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={{ textAlign: "left", padding: "8px" }}>選手名</th>
-              <th style={{ textAlign: "right", padding: "8px" }}>出走数</th>
-              <th style={{ textAlign: "right", padding: "8px" }}>事故数</th>
-              <th style={{ textAlign: "right", padding: "8px" }}>事故率</th>
-              <th style={{ textAlign: "right", padding: "8px" }}>ST平均</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(data as PlayerSummaryRow[]).map((r) => (
-              <tr key={r.player_id} style={{ borderTop: "1px solid rgba(148,163,184,0.2)" }}>
-                <td style={{ padding: "8px" }}>{r.player_name}</td>
-                <td style={{ padding: "8px", textAlign: "right" }}>{r.total_starts}</td>
-                <td style={{ padding: "8px", textAlign: "right" }}>{r.accident_count}</td>
-                <td style={{ padding: "8px", textAlign: "right" }}>
-                  {(r.accident_rate * 100).toFixed(2)}%
-                </td>
-                <td style={{ padding: "8px", textAlign: "right" }}>
-                  {r.avg_st !== null ? r.avg_st.toFixed(4) : "-"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ProgramView grouped={grouped} />
       </div>
     </main>
   );

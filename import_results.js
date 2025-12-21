@@ -1,18 +1,21 @@
 // import_results.js
+import "dotenv/config";
+import fs from "fs";
+import csv from "csv-parser";
+import { createClient } from "@supabase/supabase-js";
 
-const fs = require("fs");
-const csv = require("csv-parser");
-const { createClient } = require("@supabase/supabase-js");
-
-// 環境変数から Supabase 情報を読む
-const supabaseUrl = process.env.SUPABASE_URL;
+// 環境変数（Node.js用）
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("環境変数 SUPABASE_URL と SUPABASE_SERVICE_ROLE_KEY を設定してください。");
+　if (!supabaseUrl || !supabaseKey) {
+  console.error(
+    "環境変数 NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY が未設定です"
+  );
   process.exit(1);
 }
 
+// Supabase クライアント（1回だけ生成）
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 /*
@@ -169,7 +172,6 @@ async function run() {
       }
 
       console.log("全データのインポート完了！");
-      console.log("CSVヘッダー:", Object.keys(rows[0]));
     });
 }
 

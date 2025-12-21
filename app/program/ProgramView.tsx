@@ -4,12 +4,11 @@ import { useState } from "react";
 
 type ProgramRow = {
   jyo: string;
-  race_no: string;
+  race_no: number;
   waku: number;
   player_name: string;
-  st: number;
-  acc_point: number;
-  acc_rate: number;
+  avg_st?: string | null;
+  accident_rate?: string | null;
 };
 
 function formatNumber(value: number | null | undefined, digits: number) {
@@ -257,23 +256,15 @@ export default function ProgramView({ grouped }: { grouped: Record<string, Progr
                           </th>
                           <th
                             style={{
-                              textAlign: "right",
+                              textAlign: "center",
                               borderBottom: "1px solid rgba(15,23,42,0.9)",
                             }}
                           >
-                            ST
+                            ST平均
                           </th>
                           <th
                             style={{
-                              textAlign: "right",
-                              borderBottom: "1px solid rgba(15,23,42,0.9)",
-                            }}
-                          >
-                            事故点
-                          </th>
-                          <th
-                            style={{
-                              textAlign: "right",
+                              textAlign: "center",
                               borderBottom: "1px solid rgba(15,23,42,0.9)",
                             }}
                           >
@@ -310,30 +301,19 @@ export default function ProgramView({ grouped }: { grouped: Record<string, Progr
                             </td>
                             <td
                               style={{
-                                textAlign: "right",
+                                textAlign: "center",
                                 borderBottom: "1px solid rgba(30,41,59,0.9)",
-                                fontVariantNumeric: "tabular-nums",
                               }}
                             >
-                              {formatNumber(row.st, 3)}
+                              {formatNumber(row.avg_st ? Number(row.avg_st) : null, 3)}
                             </td>
                             <td
                               style={{
-                                textAlign: "right",
+                                textAlign: "center",
                                 borderBottom: "1px solid rgba(30,41,59,0.9)",
-                                fontVariantNumeric: "tabular-nums",
                               }}
                             >
-                              {row.acc_point ?? "-"}
-                            </td>
-                            <td
-                              style={{
-                                textAlign: "right",
-                                borderBottom: "1px solid rgba(30,41,59,0.9)",
-                                fontVariantNumeric: "tabular-nums",
-                              }}
-                            >
-                              {formatNumber(row.acc_rate, 3)}
+                              {formatNumber(row.accident_rate ? Number(row.accident_rate) : null, 3)}
                             </td>
                           </tr>
                         ))}
